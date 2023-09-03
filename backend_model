@@ -1,0 +1,27 @@
+import pandas as pd
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import mean_absolute_error
+from sklearn.model_selection import train_test_split
+mushroom_file_path = "secondary_data_generated.csv"
+shrooms_data = pd.read_csv(mushroom_file_path, delimiter=';')
+shrooms_data = shrooms_data.drop('gill-spacing', axis=1)
+shrooms_data = shrooms_data.drop('spore-print-color', axis=1)
+shrooms_data = shrooms_data.dropna(axis=0)
+print (shrooms_data)
+shroom_features = ['cap-diameter', 'cap-shape', 'cap-surface', 'cap-color', 'does-bruise-or-bleed', 'stem-height',
+'stem-width', 'has-ring','habitat']
+y = shrooms_data.poison
+X = shrooms_data[shroom_features]
+
+#specify model
+shroom_model = RandomForestClassifier(random_state=1)
+
+#split training data
+train_X, val_X, train_y, val_y = train_test_split(X, y, random_state=1)
+
+#fit model
+shroom_model.fit(train_X,train_y)
+
+#make predictions
+val_predictions = shroom_model.predict(val_X.head())
+print (val_predictions)
